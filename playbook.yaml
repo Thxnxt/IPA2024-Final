@@ -13,8 +13,10 @@
   tasks:
     - name: Collect running configuration
       ansible.netcommon.cli_command:
-        command: show running-config
-        check_all: false
+        commands:
+          - terminal length 0
+          - show running-config
+      check_all: false
       register: show_run
 
     - name: Save running configuration locally
