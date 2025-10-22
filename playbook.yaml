@@ -13,7 +13,7 @@
 
   tasks:
     - name: Collect running configuration
-      ansible.cisco.ios.ios_command:
+      cisco.ios.ios_command:
         commands:
           - terminal length 0
           - show running-config
