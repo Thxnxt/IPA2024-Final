@@ -3,6 +3,7 @@
   hosts: cisco
   gather_facts: false
   connection: network_cli
+
   vars:
     student_id: "66070084"
     output_file: "{{ playbook_dir }}/show_run_{{ student_id }}_{{ inventory_hostname }}.txt"
@@ -16,7 +17,7 @@
         commands:
           - terminal length 0
           - show running-config
-      check_all: false
+        check_all: false
       register: show_run
 
     - name: Save running configuration locally
