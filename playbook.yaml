@@ -17,7 +17,9 @@
         commands:
           - terminal length 0
           - show running-config
-        check_all: false
+        wait_for:
+          - result[0] contains version
+        match: all
       register: show_run
 
     - name: Save running configuration locally
