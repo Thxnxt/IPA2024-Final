@@ -12,6 +12,8 @@ import os
 from dotenv import load_dotenv
 import restconf_final
 import netmiko_final
+import ansible_final
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.
@@ -99,8 +101,8 @@ while True:
             responseMessage = restconf_final.status()
         elif command == "gigabit_status":
             responseMessage = netmiko_final.gigabit_status()
-        # elif command == "showrun":
-        #     <!!!REPLACEME with code for showrun command!!!>
+        elif command == "showrun":
+            responseMessage = ansible_final.showrun()
         else:
             responseMessage = "Error: No command or unknown command"
         
@@ -119,23 +121,45 @@ while True:
         # https://developer.webex.com/docs/basics for more detail
 
         # the Webex Teams HTTP headers, including the Authorization and Content-Type
-        HTTPHeaders = {
-            "Authorization": f"Bearer {ACCESS_TOKEN}",
-            "Content-Type": "application/json",
-        }
+        if responseMessage.endswith(".txt") and "Error:" not in responseMessage:
 
-        # Prepare postData for the response message
-        postData = {
-            "roomId": roomIdToGetMessages,
-            "text": responseMessage
-        }
+            # เปิดไฟล์ที่ Ansible สร้างขึ้น
+            with open(responseMessage, 'rb') as f:
+                # สร้างข้อมูลสำหรับส่งแบบ multipart (ข้อความ + ไฟล์)
+                m = MultipartEncoder({
+                    "roomId": roomIdToGetMessages,
+                    "text": f"Here is the running-config from {ansible_final.hostname}",
+                    "files": (responseMessage, f, 'text/plain')
+                })
 
-        # Post the call to the Webex Teams message API.
-        r = requests.post(
-            "https://webexapis.com/v1/messages",
-            data=json.dumps(postData),
-            headers=HTTPHeaders,
-        )
+                # ตั้งค่า HTTP Headers
+                HTTPHeaders = {
+                    "Authorization": f"Bearer {ACCESS_TOKEN}",
+                    "Content-Type": m.content_type
+                }
+
+                # ส่ง Request
+                r = requests.post(
+                    "https://webexapis.com/v1/messages",
+                    data=m,
+                    headers=HTTPHeaders
+                )
+        else:
+            # ถ้าไม่ใช่ไฟล์ (เป็นข้อความตอบกลับปกติ)
+            HTTPHeaders = {
+                "Authorization": f"Bearer {ACCESS_TOKEN}",
+                "Content-Type": "application/json",
+            }
+            postData = {
+                "roomId": roomIdToGetMessages,
+                "text": responseMessage
+            }
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=json.dumps(postData),
+                headers=HTTPHeaders,
+            )
+
         if not r.status_code == 200:
             raise Exception(
                 f"Incorrect reply from Webex Teams API. Status code: {r.status_code}"

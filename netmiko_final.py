@@ -16,6 +16,7 @@ device_params = {
 def gigabit_status():
     ans = ""
     with ConnectHandler(**device_params) as ssh:
+        ssh.disable_paging()
         up = 0
         down = 0
         admin_down = 0
