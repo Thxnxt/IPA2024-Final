@@ -159,8 +159,3 @@ while True:
                 data=json.dumps(postData),
                 headers=HTTPHeaders,
             )
-
-        if not r.status_code == 200:
-            raise Exception(
-                f"Incorrect reply from Webex Teams API. Status code: {r.status_code}"
-        )
