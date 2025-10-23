@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-hostname = "R1-Exam" 
+hostname = "Test-Pod"
 student_id = "66070084"
 output_filename = f"show_run_{student_id}_{hostname}.txt"
 
