@@ -27,7 +27,7 @@ if not ACCESS_TOKEN:
 
 # Defines a variable that will hold the roomId
 roomIdToGetMessages = (
-    "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vNWU2Y2RkNTAtYWNlMC0xMWYwLWJmN2MtYjc3MGQ0YjAzNzM5"
+    "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vYmQwODczMTAtNmMyNi0xMWYwLWE1MWMtNzkzZDM2ZjZjM2Zm"
 )
 last_message_id = None
 while True:
