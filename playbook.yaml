@@ -18,7 +18,7 @@
           - terminal length 0
           - show running-config
         wait_for:
-          - result[0] contains version
+          - result[1] contains version
         match: all
       register: show_run
 
