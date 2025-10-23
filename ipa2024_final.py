@@ -128,7 +128,7 @@ while True:
                 # สร้างข้อมูลสำหรับส่งแบบ multipart (ข้อความ + ไฟล์)
                 m = MultipartEncoder({
                     "roomId": roomIdToGetMessages,
-                    "text": f"Here is the running-config from {ansible_final.hostname}",
+                    "text": f"Show running config",
                     "files": (responseMessage, f, 'text/plain')
                 })
 
